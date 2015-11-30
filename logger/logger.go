@@ -5,8 +5,8 @@
 package logger
 
 import (
-	"fmt"
 	"io"
+	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,15 +40,11 @@ func ErrorLoggerT(typ gin.ErrorType) gin.HandlerFunc {
 	}
 }
 
-// Instances a Logger middleware that will write the logs to gin.DefaultWriter
-// By default gin.DefaultWriter = os.Stdout
-func Logger() gin.HandlerFunc {
-	return LoggerWithWriter(gin.DefaultWriter)
-}
-
 // Instance a Logger middleware with the specified writter buffer.
 // Example: os.Stdout, a file opened in write mode, a socket...
 func LoggerWithWriter(out io.Writer) gin.HandlerFunc {
+	logger := log.New(out, "", log.Lshortfile)
+
 	return func(c *gin.Context) {
 		// Start timer
 		start := time.Now()
@@ -74,7 +70,7 @@ func LoggerWithWriter(out io.Writer) gin.HandlerFunc {
 		methodColor := colorForMethod(method)
 		comment := c.Errors.ByType(gin.ErrorTypePrivate).String()
 
-		fmt.Fprintf(out, "[GIN] [%s] %v |%s %3d %s| %13v | %s |%s  %s %-7s %s\n%s",
+		logger.Printf("[GIN] [%s] %v |%s %3d %s| %13v | %s |%s  %s %-7s %s\n%s",
 			reqId,
 			end.Format("2006/01/02 - 15:04:05"),
 			statusColor, statusCode, reset,

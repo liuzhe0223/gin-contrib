@@ -7,6 +7,10 @@ import (
 	"github.com/sony/sonyflake"
 )
 
+const (
+	ReqIdHeaderFeild = "X-ReqId"
+)
+
 var (
 	sf *sonyflake.Sonyflake
 )

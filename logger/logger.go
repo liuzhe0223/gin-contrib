@@ -53,11 +53,12 @@ func LoggerWithWriter(out io.Writer) gin.HandlerFunc {
 		// Start timer
 		start := time.Now()
 		path := c.Request.URL.Path
-		reqId := c.Request.Header.Get("X-ReqId")
+		reqId := c.Request.Header.Get(ReqIdHeaderFeild)
 		if reqId == "" {
 			reqId = NewReqId()
+			c.Request.Header.Set(ReqIdHeaderFeild, reqId)
 		}
-		c.Writer.Header().Set("X-ReqId", reqId)
+		c.Writer.Header().Set(ReqIdHeaderFeild, reqId)
 
 		// Process request
 		c.Next()

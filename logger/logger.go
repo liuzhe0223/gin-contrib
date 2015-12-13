@@ -12,6 +12,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	loggerFeild = "logger"
+)
+
 var (
 	green   = string([]byte{27, 91, 57, 55, 59, 52, 50, 109})
 	white   = string([]byte{27, 91, 57, 48, 59, 52, 55, 109})
@@ -48,6 +52,9 @@ func LoggerWithWriter(out io.Writer) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Start timer
 		start := time.Now()
+		// Set logger to context
+		c.Set(loggerFeild, logger)
+
 		path := c.Request.URL.Path
 		reqId := c.Request.Header.Get(ReqIdHeaderFeild)
 		if reqId == "" {
@@ -115,4 +122,8 @@ func colorForMethod(method string) string {
 	default:
 		return reset
 	}
+}
+
+func Default(c *gin.Context) *log.Logger {
+	return c.MustGet(loggerFeild).(*log.Logger)
 }

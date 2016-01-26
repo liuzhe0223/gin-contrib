@@ -24,7 +24,7 @@ func init() {
 }
 
 func NewReqId() string {
-	var buf = make([]byte, 8)
+	var buf = make([]byte, binary.MaxVarintLen64)
 	id, err := sf.NextID()
 	if err != nil {
 		panic(err)
